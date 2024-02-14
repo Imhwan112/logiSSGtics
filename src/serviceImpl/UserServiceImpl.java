@@ -1,5 +1,6 @@
 package serviceImpl;
 
+import Model.UserStatus;
 import com.mysql.cj.protocol.Resultset;
 import dao.UserDao;
 import entity.User;
@@ -7,6 +8,7 @@ import exception.ErrorCodeList;
 import exception.ExceptionImpl;
 import exception.ExceptionOutput;
 import lib.DBConnection;
+import lib.UserManager;
 import service.UserService;
 
 import java.io.BufferedReader;
@@ -22,6 +24,8 @@ import java.util.regex.Pattern;
 public class UserServiceImpl implements UserService {
     BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
     private final UserDao userDao = new UserDao();
+
+
 
     @Override
     public boolean isCompRegNumValid(int userId) {
@@ -80,18 +84,19 @@ public class UserServiceImpl implements UserService {
              * == 구분 값 [-] ==
              * . 또는 - 값이 없거나 단 한개만 존재 하는 것
              */
-            String regex = "^01(?:0|1|[6-9])[-]?(\\d{3}|\\d{4})[-]?(\\d{4})$";
+            String regex = "^010[-]\\d{3,4}[-]\\d{4}$";
+
             Pattern p = Pattern.compile(regex);
             Matcher m = p.matcher(phone);
 
-            if (m.matches()) {
+            if (!m.matches()) {
                 // 유효하지 않는 전화번호 형식입니다..
                 throw new ExceptionOutput(ErrorCodeList.INVALID_INPUT_PHONENUMBER);
+            } else {
+                System.out.println("사용가능한 전화번호 입니다!");
             }
             return true;
         } catch (Exception e) {
-            System.out.println("핸드폰 입력에 실패했는데 이유가 뭘까용");
-            e.printStackTrace();
             return false;
         }
     }
@@ -136,6 +141,30 @@ public class UserServiceImpl implements UserService {
             return false;
         }
     }
+
+    /**
+     * 유저가 로그인 하려는 정보가 맞을 시 userManager 에서 유저 로그인 싱글톤을 불러와서
+     * 로그인을 진행해주는 메소드
+     *
+     * @param user_id : 아이디
+     * @param pw : 비번
+     * @return loggedInUser : 로그인 한 유저
+     *          null        : 로그인 실패
+     */
+    public User userLogin(String user_id, String pw) {
+        User loggedInUser = userDao.authUser(user_id, pw);
+//        System.out.println("userLogin");
+        if (loggedInUser != null) {
+            UserManager.getInstance().loginUser(loggedInUser);
+            System.out.println(UserManager.getInstance().getCurUser());
+        } else {
+            System.out.println("유저 로그인 실패");
+            return null;
+        }
+        return loggedInUser;
+    }
+
+
 
     public void mainMenu() {
 
