@@ -1,12 +1,16 @@
 package entity;
 
 import lombok.*;
+import model.UserRole;
+import model.UserStatus;
 
 import java.security.Timestamp;
+import java.sql.Date;
 
 @Data
 public class Customer {
     private int customer_id;
+    private UserRole userRole;
     private String user_id;
     private char name;
     private String phone;
@@ -19,12 +23,7 @@ public class Customer {
     private boolean text_agree;
     private boolean email_agree;
     private boolean ad_agree;
-    private enum UserStatus {
-        DEACTIVATE,
-        ACTIVATE,
-        BANNED,
-        REQUEST;
-    };
-    private Timestamp reg_date;
+    private UserStatus userStatus;
+    private Date reg_date;
 
 }

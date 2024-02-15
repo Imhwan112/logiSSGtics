@@ -1,31 +1,19 @@
-package serviceImpl;
+package service;
 
-import Model.UserStatus;
-import com.mysql.cj.protocol.Resultset;
+import entity.Customer;
+import model.UserRole;
 import dao.UserDao;
 import entity.User;
 import exception.ErrorCodeList;
-import exception.ExceptionImpl;
 import exception.ExceptionOutput;
-import lib.DBConnection;
-import lib.UserManager;
-import service.UserService;
+import config.UserManager;
 
 import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.InputStreamReader;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class UserServiceImpl implements UserService {
-    BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-    private final UserDao userDao = new UserDao();
-
-
 
     @Override
     public boolean isCompRegNumValid(int userId) {
@@ -147,28 +135,60 @@ public class UserServiceImpl implements UserService {
      * 로그인을 진행해주는 메소드
      *
      * @param user_id : 아이디
-     * @param pw : 비번
-     * @return loggedInUser : 로그인 한 유저
-     *          null        : 로그인 실패
+     * @param pw      : 비번
      */
-    public User userLogin(String user_id, String pw) {
-        User loggedInUser = userDao.authUser(user_id, pw);
-//        System.out.println("userLogin");
-        if (loggedInUser != null) {
-            UserManager.getInstance().loginUser(loggedInUser);
-            System.out.println(UserManager.getInstance().getCurUser());
-        } else {
-            System.out.println("유저 로그인 실패");
-            return null;
+    public void userLogin(String choice, String user_id, String pw) {
+        try {
+            //TODO:: DTO 내가 원하는 승객을 태워서 원하는 곳으로 보내는 셔틀 같은 느낌
+
+            switch (choice) {
+                // user(seller)
+                case "1" -> {
+                    User seller = userDao.authUser(user_id, pw);
+
+                    if (seller != null) {
+                        UserManager.getInstance().loginUser(seller);
+                        UserRole role = UserManager.getInstance().getCurUser().getUserRole();
+                        /**
+                         * 권한별 사용법 (menu 에서 권한을 다르게 줘야댐)
+                         * switch (role) {
+                         *      case GENERAL_MANAGER -> {
+                         *          // ...
+                         *          // break;
+                         *      }
+                         *      case WAREHOUSE_MANAGER -> {
+                         *          // ...
+                         *          // break;
+                         *      }
+                         * }
+                         */
+                    } else {
+                        System.out.println("유저 로그인 실패");
+                    }
+                }
+                // customer
+                case "2" -> {
+                    Customer customer = userDao.authCustomer(user_id, pw);
+
+                    if (customer != null) {
+                        UserManager.getInstance().loginCustomer(customer);
+                        UserRole role = UserManager.getInstance().getCurCustomer().getUserRole();
+                        System.out.println("dddddddddddddddddddd"+role);
+                        System.out.println("eeeeeeeeeee"+UserManager.getInstance().getCurCustomer().getAddr1());
+                    } else {
+                        System.out.println("유저 로그인 실패");
+                    }
+                }
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-        return loggedInUser;
     }
 
 
 
-    public void mainMenu() {
 
-    }
 
 
 }

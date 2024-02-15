@@ -12,7 +12,8 @@ public enum ErrorCodeList implements ErrorModel{
     ID_CONTAINS_SPACE(400, "아이디는 공백을 포함 할 수 없습니다", "I003"),
     ID_CONTAINS_NON_ALPHABET_NUMBER(400, "아이디는 영어와 숫자만 입력이 가능합니다.", "I004"),
     SQL_SELECT_FAIL(400, "DB 에서 값을 가져오는대에 실패하였습니다.", "S001"),
-    NULL_POINTER_EXCEPTION(404, " Null 값입니다! 값을 확인해주세요.", "N001");
+    NULL_POINTER_EXCEPTION(404, " Null 값입니다! 값을 확인해주세요.", "N001"),
+    USER_INPUT_ERROR(400, "유저의 값을 입력 받는데 문제가 있습니다.", "U001");
     private int status;
     private String code;
     private String message;

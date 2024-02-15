@@ -1,11 +1,12 @@
-package Model;
+package model;
 
 public enum UserRole {
     GENERAL_MANAGER,
     WAREHOUSE_MANAGER,
     DELIVERYMAN,
     USER,
-    NON_USER;
+    NON_USER,
+    CUSTOMER;
 
 
     // Role Checker
@@ -26,6 +27,10 @@ public enum UserRole {
     }
 
     public boolean isNonUser() {
+        return this == NON_USER;
+    }
+
+    public boolean isCUSTOMER() {
         return this == NON_USER;
     }
 

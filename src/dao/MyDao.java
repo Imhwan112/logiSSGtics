@@ -1,6 +1,6 @@
 package dao;
 
-import lib.DBConnection;
+import config.DBConnection;
 
 import javax.sql.DataSource;
 import java.sql.Connection;

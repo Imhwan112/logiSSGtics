@@ -1,8 +1,13 @@
-package lib;
+package config;
 
-import Model.UserStatus;
+import entity.Customer;
+import lombok.Getter;
+import model.UserStatus;
 import dao.UserDao;
 import entity.User;
+
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
 
 
 /**
@@ -18,7 +23,25 @@ import entity.User;
 public class UserManager {
     // 싱글톤 인스턴스 생성
     private static volatile  UserManager instance;
+    /**
+     * -- GETTER --
+     *  현재 로그인한 유저의 정보
+     *
+     * @return 현재 로그인한 유저의 정보
+     */
+    @Getter
     private User curUser;
+    /**
+     * -- GETTER --
+     *  현재 로그인한 구매자의 정보
+     *
+     * @return 현재 로그인한 유저의 정보
+     */
+    @Getter
+    private Customer curCustomer;
+    private Customer customer;
+    public static UserDao userDao = new UserDao();
+    static BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 
     public UserManager(){}
 
@@ -39,6 +62,14 @@ public class UserManager {
     }
 
     /**
+     * 구매자 로그인
+     * @param user : 새로 받은 유저
+     */
+    public void loginCustomer(Customer user) {
+        curCustomer = user;
+    }
+
+    /**
      * 유저 로그아웃
      */
     public void logoutUser() {
@@ -46,11 +77,10 @@ public class UserManager {
     }
 
     /**
-     * 현재 로그인한 유저의 정보
-     * @return 현재 로그인한 유저의 정보
+     * 구매자 로그아웃
      */
-    public User getCurUser() {
-        return curUser;
+    public void logoutCustomer() {
+        curCustomer = null;
     }
 
     /**
@@ -59,25 +89,48 @@ public class UserManager {
      * @return  true : 로그인 상태
      *          false : 로그아웃 상태
      */
-    public boolean isLoggedIn() {
+    public boolean isUserLoggedIn() {
         return curUser != null;
     }
 
     /**
+     * 고객이 로그인이 되어 있는지 안되어 있는지 확인하는 메소드
+     *
+     * @return  true : 로그인 상태
+     *          false : 로그아웃 상태
+     */
+    public boolean isCustomerLoggedIn() {
+        return curCustomer != null;
+    }
+
+    /**
      * 유저의 계정 상태를 체크를 해줍니다.
+     * (구매자는 승인 받지 않습니다)
      * 유저가 ACTIVATE 상태 일 때만 로그인을 해줍니다.
      *
      * @param user : 로그인 유저
      * @return user.getUserStatus() : ACTIVATE
-     *         NULL                 : DEACTIVATE, BANNED, REQUEST
+     *         NULL                 : DEACTIVATE, BANNED, REQUEST, REJECT
      */
     public static UserStatus statusChecker(User user) {
-
+        // TODO::reject 사유 column 값 추가해야댐
         String status = user.getUserStatus().toString().toUpperCase();
         try {
             if (status.equals("REQUEST")) {
-                System.out.println("유저 인증을 기다리는 상태입니다. 관리자에게 문의하세요");
-                return null;
+                System.out.println("유저 승인이 필요합니다. 요청하시겠습니까? (Y/N)");
+                String answer = br.readLine().toUpperCase();
+                if (answer.equals("Y")) {
+                    // TODO:: 관리자일경우에만 허락 가능 하게!
+                    userDao.approveUser(user);
+                    System.out.println("로그인을 다시 진행해주세요");
+                    return null;
+                } else if(answer.equals("N")) {
+                    System.out.println("유저 승인을 진행하지 않았습니다. 로그인 페이지로 다시 돌아갑니다");
+                    return null;
+                } else {
+                    System.out.println("잘못된 값입니다 다시 로그인을 해주세요");
+                }
+
             } else if (status.equals("DEACTIVATE")) {
                 System.out.println("휴면계정 상태입니다. 관리자에게 문의하세요");
                 return null;

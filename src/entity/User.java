@@ -1,10 +1,9 @@
 package entity;
 
-import Model.UserRole;
-import Model.UserStatus;
+import model.UserRole;
+import model.UserStatus;
 import lombok.*;
 
-import java.security.Timestamp;
 import java.sql.Date;
 
 @Data

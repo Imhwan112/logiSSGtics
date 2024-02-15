@@ -1,8 +1,7 @@
-package lib;
+package config;
 
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.time.Duration;
 import java.util.Properties;
 import javax.sql.DataSource;
 
@@ -135,7 +134,7 @@ public class DBConnection {
         BasicDataSource dataSource = new BasicDataSource();
         try {
             // TODO:: .env 파일을 읽어옵니다. 파일 경로는 모든 사람마다 다 다르므로 수정을 해주세요
-            FileInputStream fs = new FileInputStream("C:/Users/TaeJin Kim/OneDrive/Desktop/신세계아이앤씨/미니프로젝트1/logiSSGtics/src/lib/.env");
+            FileInputStream fs = new FileInputStream("C:/Users/TaeJin Kim/OneDrive/Desktop/신세계아이앤씨/미니프로젝트1/logiSSGtics/src/config/.env");
             Properties properties = new Properties();
             properties.load(fs);
 

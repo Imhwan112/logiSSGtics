@@ -1,6 +1,6 @@
-package serviceImpl;
+package service;
 
-import Model.UserRole;
+import model.UserRole;
 
 public class UserUsage {
     public static void main(String[] args) {
