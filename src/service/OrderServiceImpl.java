@@ -26,7 +26,7 @@ public class OrderServiceImpl implements OrderService {
     public void mainMenu() {
         while (true) {
             try {
-                System.out.printf("%30s%n", "주문 관리 시스템");
+                System.out.printf("%25s%n", "주문 관리 시스템");
                 System.out.println("1.주문 등록 | 2.단건 주문 조회 | 3.주문 확정 | 4.종료 ");
 
                 int inputNum = Integer.parseInt(br.readLine());
@@ -389,7 +389,7 @@ public class OrderServiceImpl implements OrderService {
             System.out.print("수정할 주문의 주문번호를 입력하세요: ");
             String input = br.readLine();
             // 주문이 존재하는지 확인하는 쿼리 실행
-            String nameSql = "UPDATE orders o JOIN Customer c on o.customer_id = c.customer_id SET c.name = ? WHERE o.orderID = ? ";
+            String nameSql = "UPDATE orders o JOIN Customer c on o.customer_id = c.customer_id SET c.name = ? , o.buyer = ? WHERE o.orderID = ? ";
             PreparedStatement namePstmt = conn.prepareStatement(nameSql);
             System.out.println("구매자 이름을 수정하시겠습니까? Y/N");
             String upName = br.readLine();
@@ -397,7 +397,8 @@ public class OrderServiceImpl implements OrderService {
                 System.out.println("수정할 구매자 이름을 입력하시오(최대 5글자)");
                 String nameInput = br.readLine();
                 namePstmt.setString(1, nameInput);
-                namePstmt.setString(2, input);
+                namePstmt.setString(2,nameInput);
+                namePstmt.setString(3, input);
                 int rows = namePstmt.executeUpdate();
                 if (rows > 0) {
                     System.out.println("구매자 이름이 수정되었습니다");

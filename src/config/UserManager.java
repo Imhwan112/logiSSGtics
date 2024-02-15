@@ -133,11 +133,14 @@ public class UserManager {
 
             } else if (status.equals("DEACTIVATE")) {
                 System.out.println("휴면계정 상태입니다. 관리자에게 문의하세요");
+                System.out.println("=========================================================================");
                 return null;
             } else if (status.equals("BANNED")) {
                 System.out.println("계정이 정지된 상태입니다. 관리자에게 문의하세요");
+                System.out.println("=========================================================================");
             } else if (status.equals("ACTIVATE")) {
                 System.out.println("계정이 활성화 상태입니다. 로그인을 진행합니다.");
+                System.out.println("=========================================================================");
                 return user.getUserStatus();
             } else {
                 System.out.println("엥?");

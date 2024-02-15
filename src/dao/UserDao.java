@@ -126,10 +126,11 @@ public class UserDao extends DBConnection {
                 User user = storeUser(rs);
                 System.out.println(
                         "아이디 비밀번호 인증 완료!\n"
+                                + "=========================================================================\n"
                                 + "아이디: " + user.getUser_id()
-                                + " 비빌번호: " + user.getPassword()
-                                + " 권한: " + user.getUserRole()
-                                + " 상태: " + user.getUserStatus()
+                                + " | 비빌번호: " + user.getPassword()
+                                + " | 권한: " + user.getUserRole()
+                                + " | 상태: " + user.getUserStatus()
                 );
                 // 유저의 상태가 활성화 일 시
                 if (UserManager.statusChecker(user) != null) {
@@ -138,7 +139,7 @@ public class UserDao extends DBConnection {
                     return null;
                 }
             } else {
-                System.out.println("값이 없다");
+                System.out.println("아이디와 비밀번호를 확인해주세요.");
                 return null; // Authentication failed
             }
         } catch (

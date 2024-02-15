@@ -1,4 +1,6 @@
 import config.UserManager;
+import exception.ErrorCodeList;
+import exception.ExceptionOutput;
 import service.UserServiceImpl;
 
 import java.io.BufferedReader;
@@ -53,12 +55,25 @@ public class Main {
         try {
             // 구매자로 로그인할지 판매자로 할지
             // 판매자 1, 구매자 2
+            System.out.println("=========================================================================");
+            System.out.println("로그인 할 계정을 선택해주세요 \n 1. 판매자 | 2. 구매자");
+            System.out.println("=========================================================================");
             String choice = br.readLine();
-            userService.userLogin(choice, "user3", "password3");
-            if (choice.equals("1"))
-                System.out.println(UserManager.getInstance().getCurUser() + " yyyyyyyyyyyyyyyy");
-            else if (choice.equals("2"))
-                System.out.println(UserManager.getInstance().getCurCustomer() + " yyyyyyyyyyyyyyyy");
+
+            if (choice.equals("1") || choice.equals("2")) {
+                System.out.print("로그인을 진행 할 아이디를 입력해주세요 : ");
+                String user = br.readLine();
+
+                System.out.print("로그인을 진행 할 비밀번호를 입력해주세요 : ");
+                String pw = br.readLine();
+                userService.userLogin(choice, user, pw);
+            } else {
+                throw new ExceptionOutput(ErrorCodeList.USER_INPUT_ERROR);
+            }
+//            if (choice.equals("1"))
+//                System.out.println(UserManager.getInstance().getCurUser() + " yyyyyyyyyyyyyyyy");
+//            else if (choice.equals("2"))
+//                System.out.println(UserManager.getInstance().getCurCustomer() + " yyyyyyyyyyyyyyyy");
 
 
         } catch (Exception e) {
